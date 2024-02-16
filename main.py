@@ -41,14 +41,15 @@ logging.getLogger('').addHandler(consoleHandler)
 #count 제거시 default는 200이고, 이는 한 요청의 최대치임.
 #따라서 200이상의 데이터를 요청 시 0.1(defalt)주기로 데이터를 수집
 #다른 API와 함께 사용하면 period를 늘려야함. 최대 요청량을 초과하기 때문
-#df = pyupbit.get_ohlcv("KRW-BTC", count=10)
+df = pyupbit.get_ohlcv("KRW-BTC", count=10)
 #df = pyupbit.get_ohlcv("KRW-BTC", count=600, period=1)
-#print(df.tail())
+print(df.tail())
 
 #interval 파라미터는 조회단위를 지정합니다. 파라미터에는 다음 값을 지정할 수 있습니다.
 #day/minute1/minute3/minute5/minute10/minute15/minute30/minute60/minute240/week/month
 #print(pyupbit.get_ohlcv("KRW-BTC", interval="minute1"))
-
+# df = pyupbit.get_ohlcv("KRW-BTC", interval="minute1", count=2243580)
+# print(df.tail())
 #종료 일자를 지정하고 싶으면 to를 사용
 #print(pyupbit.get_ohlcv("KRW-BTC",interval="minute1" , to="202402091700"))
 
@@ -120,19 +121,19 @@ upbit = pyupbit.Upbit(access, secret)
 
     
     
-if __name__ == "__main__":
-    try:
-        logging.info("웹소켓 연결 시도 중...")
-        wm = WebSocketManager("ticker", ["KRW-BTC"])
+# if __name__ == "__main__":
+#     try:
+#         logging.info("웹소켓 연결 시도 중...")
+#         wm = WebSocketManager("ticker", ["KRW-BTC"])
 
-        for i in range(10):
-            data = wm.get()
-            if data:
-                logging.info(f"수신된 데이터: {data}")
-            else:
-                logging.debug("데이터 수신 대기중...")
-    except Exception as e:
-        logging.error(f"웹소켓 연결 또는 데이터 수신 중 오류 발생: {e}")
-    finally:
-        wm.terminate()
-        logging.info("웹소켓 연결 종료")
+#         for i in range(10):
+#             data = wm.get()
+#             if data:
+#                 logging.info(f"수신된 데이터: {data}")
+#             else:
+#                 logging.debug("데이터 수신 대기중...")
+#     except Exception as e:
+#         logging.error(f"웹소켓 연결 또는 데이터 수신 중 오류 발생: {e}")
+#     finally:
+#         wm.terminate()
+#         logging.info("웹소켓 연결 종료")
