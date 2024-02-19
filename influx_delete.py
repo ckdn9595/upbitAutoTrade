@@ -3,16 +3,16 @@ from influxdb_client import InfluxDBClient
 from datetime import datetime
 
 ## API 세팅
-bucket="crypto"
+bucket="KRW"
 token = os.environ.get("INFLUXDB_TOKEN")
-org = "upbit-trade"
-url = "http://3.36.115.87:8086"
+org = "crypto-trade"
+url = "http://localhost:8086"
 
-client = InfluxDBClient(url=url, token=token, org=org)
+client = InfluxDBClient(url=url, token=token, org=org, timeout=100000)
 
-start = "2024-02-01T00:00:00Z"
+start = "2004-01-01T00:00:00Z"
 stop = "2024-02-16T00:00:00Z"
-predicate = '_measurement="crypto-trade" AND currency_pair="KRW-BTC"'
+predicate = '_measurement="KRW-BTC"'
 
 # 삭제 요청 생성
 delete_api = client.delete_api()

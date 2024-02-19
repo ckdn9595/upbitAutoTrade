@@ -1,4 +1,5 @@
 import asyncio
+import os
 from csv import DictReader
 
 import reactivex as rx
@@ -23,10 +24,10 @@ def csv_to_generator(csv_file_path):
 
 
 async def main():
-    bucket="crypto"
+    bucket="KRW"
     token = os.environ.get("INFLUXDB_TOKEN")
-    org = "upbit-trade"
-    url = "http://3.36.115.87:8086"
+    org = "crypto-trade"
+    url = "http://localhost:8086"
     async with InfluxDBClientAsync(url=url, token=token, org=org) as client:
         write_api = client.write_api()
 

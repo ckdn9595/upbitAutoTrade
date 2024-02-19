@@ -41,9 +41,9 @@ logging.getLogger('').addHandler(consoleHandler)
 #count 제거시 default는 200이고, 이는 한 요청의 최대치임.
 #따라서 200이상의 데이터를 요청 시 0.1(defalt)주기로 데이터를 수집
 #다른 API와 함께 사용하면 period를 늘려야함. 최대 요청량을 초과하기 때문
-df = pyupbit.get_ohlcv("KRW-BTC", count=10)
+df = pyupbit.get_ohlcv("KRW-BTC", count=2)
 #df = pyupbit.get_ohlcv("KRW-BTC", count=600, period=1)
-print(df.tail())
+print(df)
 
 #interval 파라미터는 조회단위를 지정합니다. 파라미터에는 다음 값을 지정할 수 있습니다.
 #day/minute1/minute3/minute5/minute10/minute15/minute30/minute60/minute240/week/month
