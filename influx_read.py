@@ -1,21 +1,71 @@
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import os
+from datetime import datetime, timezone, time, timedelta
+import pytz
 
-bucket="KRW"
-token = os.environ.get("INFLUXDB_TOKEN")
-org = "crypto-trade"
-url = "http://localhost:8086"
+class readInfluxData:
+    
+    def __init__(self):
+        self.bucket="KRW"
+        self.token = os.environ.get("INFLUXDB_TOKEN")
+        self.org = "crypto-trade"
+        self.url = "http://localhost:8086"
+    
+    #날짜 기간 설정
+    def read_with_range(self, measure_name, start_date, end_date):
+        close_query = (
+            f'from(bucket:"{self.bucket}")'
+            f' |> range(start:{start_date}, stop:{end_date})'
+            f' |> filter(fn: (r) => r["_measurement"] == "{measure_name}")'
+            f' |> filter(fn: (r) => (r["_field"] == "close"))'
+            f' |> keep(columns: ["_time", "_value", "_field"])'
+        )
+        volume_query = (
+            f'from(bucket:"{self.bucket}")'
+            f' |> range(start:{start_date}, stop:{end_date})'
+            f' |> filter(fn: (r) => r["_measurement"] == "{measure_name}")'
+            f' |> filter(fn: (r) => (r["_field"] == "volume"))'
+            f' |> keep(columns: ["_time", "_value", "_field"])'
+        )
+        join = (
+            'join('
+            '    tables: {'
+            f'        close: {close_query}, volume: {volume_query}'
+            '        },'
+            '    on: ["_time"])'
+            '|> map(fn: (r) => ({_time: r._time,close: r._value_close,volume: r._value_volume}))'
+        )
+        with InfluxDBClient(url=self.url, token=self.token, org=self.org) as client:
 
-with InfluxDBClient(url=url, token=token, org=org) as client:
+            """
+            Query: using Table structure
+            """
+            tables = client.query_api().query(join)
 
-    """
-    Query: using Table structure
-    """
-    tables = client.query_api().query(f'from(bucket:"{bucket}") |> range(start: -1d) |> filter(fn: (r) => r["_measurement"] == "KRW-BTC")')
+            """
+            Serialize to JSON
+            """
+            output = tables.to_json(indent=5) #indent=5는 JSON 출력 포맷을 보기 좋게 들여쓰기하기 위한 옵션
+            return output
+            
+    #지난 N일동안 데이터 불러오기
+    def read_last_days(self, measure_name, days):
+        with InfluxDBClient(url=self.url, token=self.token, org=self.org) as client:
+            
+            tables = client.query_api().query(f'from(bucket:"{self.bucket}") \
+                |> range(start: -{days}) \
+                |> filter(fn: (r) => r["_measurement"] == "{measure_name}")')
 
-    """
-    Serialize to JSON
-    """
-    output = tables.to_json(indent=5) #indent=5는 JSON 출력 포맷을 보기 좋게 들여쓰기하기 위한 옵션
-    print(output)
+            output = tables.to_json(indent=5) #indent=5는 JSON 출력 포맷을 보기 좋게 들여쓰기하기 위한 옵션
+            print(output)
+            
+
+timezone = pytz.timezone("Asia/Seoul")
+influx_reader = readInfluxData()
+start_str = "2023-12-02 09:00"
+end_str = "2023-12-02 09:05"
+start = datetime.strptime(start_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone).isoformat()
+end = datetime.strptime(end_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone).isoformat()
+json_data = influx_reader.read_with_range("KRW-BTC", start, end)
+print(json_data)
