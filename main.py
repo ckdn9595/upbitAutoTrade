@@ -32,7 +32,7 @@ logging.getLogger('').addHandler(consoleHandler)
 #print(pyupbit.get_tickers(fiat="KRW"))
 
 #get_current_price 함수는 암호화폐의 현재가를 얻어옵니다. 함수로 티커를 넣어줘야 합니다.
-#print(pyupbit.get_current_price("KRW-BTC"))
+print(pyupbit.get_current_price("KRW-BTC"))
 
 #리스트에 여러 개의 티커를 입력해 한 번에 현재가를 조회,  get_current_price 함수는 최대 100개의 암호화폐를 조회 100회 이상일 경우 반복 조회
 #print(pyupbit.get_current_price(["KRW-BTC", "KRW-XRP"]))
@@ -41,9 +41,9 @@ logging.getLogger('').addHandler(consoleHandler)
 #count 제거시 default는 200이고, 이는 한 요청의 최대치임.
 #따라서 200이상의 데이터를 요청 시 0.1(defalt)주기로 데이터를 수집
 #다른 API와 함께 사용하면 period를 늘려야함. 최대 요청량을 초과하기 때문
-df = pyupbit.get_ohlcv("KRW-BTC", count=2)
+#df = pyupbit.get_ohlcv("KRW-BTC", count=2)
 #df = pyupbit.get_ohlcv("KRW-BTC", count=600, period=1)
-print(df)
+#print(df)
 
 #interval 파라미터는 조회단위를 지정합니다. 파라미터에는 다음 값을 지정할 수 있습니다.
 #day/minute1/minute3/minute5/minute10/minute15/minute30/minute60/minute240/week/month

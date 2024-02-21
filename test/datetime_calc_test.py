@@ -7,7 +7,7 @@ import datetime
 # print("두 날짜 및 시간의 차이:", delta)
 
 class DateCalcTest(unittest.TestCase):
-    def 날짜파싱테스트(self):
+    def test_날짜파싱테스트(self):
         str_date = "2022-03-01 12:30:45"
         dt = datetime.datetime.strptime(str_date, "%Y-%m-%d %H:%M:%S")
         
@@ -16,7 +16,7 @@ class DateCalcTest(unittest.TestCase):
         self.assertEqual(dt, dt2)
         
     
-    def 시작일종료일입력시분구하기(self):
+    def test_시작일종료일입력시분구하기(self):
         self.assertTrue(True)
         
 if __name__ == '__main__':
