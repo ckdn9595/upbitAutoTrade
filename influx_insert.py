@@ -35,7 +35,6 @@ maBase.reset_index(inplace=True)
 maBase.rename(columns={'index': 'timestamp'}, inplace=True)
 
 df = pyupbit.get_ohlcv(interval="minute1", count=min_count, to=end_str)
-## 이코드 확인 필요 컬럼명이 제대로 바꿔지나?
 df.reset_index(inplace=True)
 df.rename(columns={'index': 'timestamp'}, inplace=True)
 

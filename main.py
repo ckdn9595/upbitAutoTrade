@@ -101,9 +101,9 @@ upbit = pyupbit.Upbit(access, secret)
 # 수수료가 0.05%라면 수수료를 포함한 10005원의 현금을 보유하고 있어야 함.
 
 # 시장가 매수
-# print(upbit.buy_market_order("KRW-XRP", 10000))
+print(upbit.buy_market_order("KRW-XRP", 10000))
 # 시장가 매도
-# print(upbit.sell_market_order("KRW-XRP", 30)) #리플 30개를 시장가 매도, 매도대금이 총 10000원이라면 수수료를 제외한 금액이 입금
+print(upbit.sell_market_order("KRW-XRP", 30)) #리플 30개를 시장가 매도, 매도대금이 총 10000원이라면 수수료를 제외한 금액이 입금
 
 
 #미체결 주문 조회

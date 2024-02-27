@@ -9,13 +9,18 @@ from datetime import datetime, timezone, time, timedelta
 timezone = pytz.timezone("Asia/Seoul")
 
 influx_reader = readInfluxData()
-start_str = "2023-12-02 09:00"
-end_str = "2023-12-02 09:05"
-start = datetime.strptime(
-    start_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone).isoformat()
-end = datetime.strptime(
-    end_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone).isoformat()
-json_data = influx_reader.read_with_range("KRW-BTC", start, end)
+# start_str = "2023-12-02 09:00"
+# end_str = "2023-12-02 09:05"
+# start = datetime.strptime(
+#     start_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone).isoformat()
+# end = datetime.strptime(
+#     end_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone).isoformat()
+# json_data = influx_reader.read_with_range_pivot("KRW-BTC", start, end)
+# print(json_data)
+
+start_str = "2023-09-12T09:00:00+08:28"
+end_str = "2023-09-12T09:02:00+08:28"
+json_data = influx_reader.read_with_range_join("KRW-BTC", start_str, end_str)
 print(json_data)
 # class InfluxReadTest(unittest.TestCase):
 #     def test_날짜간격으로읽어오기(self):
