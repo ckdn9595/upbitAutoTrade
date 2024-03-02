@@ -45,7 +45,7 @@ class readInfluxData:
             f'from(bucket:"{self.bucket}")'
             f' |> range(start:{start_date}, stop:{end_date})'
             f' |> filter(fn: (r) => r["_measurement"] == "{measure_name}")'
-            f' |> filter(fn: (r) => (r["_field"] == "close" or r["_field"] == "volume" or r["_field"] == "da20"))'
+            f' |> filter(fn: (r) => (r["_field"] == "close" or r["_field"] == "volume" or r["_field"] == "da20" or r["_field"] == "high" or r["_field"] == "low"))'
             f' |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")'
         )
         return self.call_InfluxDBClient(query)
