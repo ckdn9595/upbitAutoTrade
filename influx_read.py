@@ -50,6 +50,17 @@ class readInfluxData:
         )
         return self.call_InfluxDBClient(query)
 
+    def read_with_range_pivot_tag(self, measure_name, start_date, end_date, interval):
+        query = (
+            f'from(bucket:"{self.bucket}")'
+            f' |> range(start:{start_date}, stop:{end_date})'
+            f' |> filter(fn: (r) => r["_measurement"] == "{measure_name}")'
+            f' |> filter(fn: (r) => r["interval"] == "{interval}")'  # 태그 조건 추가
+            f' |> filter(fn: (r) => (r["_field"] == "close" or r["_field"] == "volume" or r["_field"] == "da20" or r["_field"] == "high" or r["_field"] == "low"))'
+            f' |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")'
+        )
+        return self.call_InfluxDBClient(query)
+    
     # 
     def read_with_period(self, measure_name, period):
         query = (

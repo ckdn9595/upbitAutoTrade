@@ -18,8 +18,8 @@ influx_reader = readInfluxData()
 # json_data = influx_reader.read_with_range_pivot("KRW-BTC", start, end)
 # print(json_data)
 
-start_str = "2023-09-12T09:00:00+08:28"
-end_str = "2023-09-12T09:02:00+08:28"
+start_str = "2021-10-31T09:00:00+08:28"
+end_str = "2021-11-12T09:02:00+08:28"
 json_data = influx_reader.read_with_range_join("KRW-BTC", start_str, end_str)
 print(json_data)
 # class InfluxReadTest(unittest.TestCase):

@@ -47,8 +47,8 @@ print(pyupbit.get_current_price("KRW-BTC"))
 
 #interval 파라미터는 조회단위를 지정합니다. 파라미터에는 다음 값을 지정할 수 있습니다.
 #day/minute1/minute3/minute5/minute10/minute15/minute30/minute60/minute240/week/month
-#print(pyupbit.get_ohlcv("KRW-BTC", interval="minute1"))
-# df = pyupbit.get_ohlcv("KRW-BTC", interval="minute1", count=2243580)
+print(pyupbit.get_ohlcv("KRW-BTC", interval="minute1", count=4))
+ #df = pyupbit.get_ohlcv("KRW-BTC", interval="minute60", count=2243580)
 # print(df.tail())
 #종료 일자를 지정하고 싶으면 to를 사용
 #print(pyupbit.get_ohlcv("KRW-BTC",interval="minute1" , to="202402091700"))
@@ -101,9 +101,9 @@ upbit = pyupbit.Upbit(access, secret)
 # 수수료가 0.05%라면 수수료를 포함한 10005원의 현금을 보유하고 있어야 함.
 
 # 시장가 매수
-print(upbit.buy_market_order("KRW-XRP", 10000))
+#print(upbit.buy_market_order("KRW-XRP", 10000))
 # 시장가 매도
-print(upbit.sell_market_order("KRW-XRP", 30)) #리플 30개를 시장가 매도, 매도대금이 총 10000원이라면 수수료를 제외한 금액이 입금
+#print(upbit.sell_market_order("KRW-XRP", 30)) #리플 30개를 시장가 매도, 매도대금이 총 10000원이라면 수수료를 제외한 금액이 입금
 
 
 #미체결 주문 조회

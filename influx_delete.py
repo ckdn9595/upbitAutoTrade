@@ -11,7 +11,7 @@ url = "http://localhost:8086"
 client = InfluxDBClient(url=url, token=token, org=org, timeout=100000)
 
 start = "2004-01-01T00:00:00Z"
-stop = "2024-02-16T00:00:00Z"
+stop = "2024-03-18T00:00:00Z"
 predicate = '_measurement="KRW-BTC"'
 
 # 삭제 요청 생성
