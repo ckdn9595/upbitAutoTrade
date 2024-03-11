@@ -8,6 +8,7 @@ import pyupbit
 import influx_read
 from Indicators.bollinger_bands import bollinger
 from Indicators.adx import adx
+from buysell.adx_bolinger_v1 import buysell
 from datetime import datetime, timedelta
 import pytz
 import json
@@ -16,6 +17,7 @@ import logging
 
 bollinger = bollinger()
 adx = adx()
+buysell = buysell()
 #컬럼 출력 조절되는 기본 옵션 제거
 pd.set_option('display.max_columns', None)
 # 로깅 기본 설정: 로그 레벨, 로그 파일 경로 및 로그 메시지 포맷
@@ -90,7 +92,7 @@ while (simulation_now_time <= simulation_end_time):
         "_time": simulation_now_time.isoformat(), "close": now_price, "high": now_price, "low": now_price}
     adx.calc_adx(last_30hour)
     bollinger.calc_bolinger_hour(last_30hour)
-    print(last_30hour)
+    buysell.buy_sell_algo(last_30hour)
     #(이제 다음은 adx의 결과에 따라서 사고 팔고 해줘야해, 그래서 수수료 계산까지 추가해서 시뮬레이션결과 
     # 얼마를 벌고하는지 데이터 통계를 먼저 내보고)
     # 이를 추가적으로 차트화 시켜서 그래프상 어느지점에서 사고 팔았는지 시각화를 해보자.
