@@ -8,7 +8,8 @@ import pyupbit
 import influx_read
 from Indicators.bollinger_bands import bollinger
 from Indicators.adx import adx
-from buysell.adx_bolinger_v1 import buysell
+from algorithm.adx_bolinger_v1 import adx_bollinger, BuyorSell
+from buy_sell.buysell import buysell
 from datetime import datetime, timedelta
 import pytz
 import json
@@ -17,7 +18,8 @@ import logging
 
 bollinger = bollinger()
 adx = adx()
-buysell = buysell()
+adx_bollinger = adx_bollinger()
+buysell_instance = buysell(1000000)  # 초기 자금 100만원 가정
 #컬럼 출력 조절되는 기본 옵션 제거
 pd.set_option('display.max_columns', None)
 # 로깅 기본 설정: 로그 레벨, 로그 파일 경로 및 로그 메시지 포맷
@@ -80,7 +82,7 @@ while (simulation_now_time <= simulation_end_time):
         
         df = pd.DataFrame(temp_data, columns=[
                         "_time", "close", 'high', 'low'])
-        last_30hour = last_30hour.append(df, ignore_index=True)
+        last_30hour = pd.concat([last_30hour, df], ignore_index=True)
         now_hour += timedelta(hours=1)
         
     now_price = json.loads(read_influx.read_with_range_pivot_tag(
@@ -92,11 +94,30 @@ while (simulation_now_time <= simulation_end_time):
         "_time": simulation_now_time.isoformat(), "close": now_price, "high": now_price, "low": now_price}
     adx.calc_adx(last_30hour)
     bollinger.calc_bolinger_hour(last_30hour)
-    buysell.buy_sell_algo(last_30hour)
-    #(이제 다음은 adx의 결과에 따라서 사고 팔고 해줘야해, 그래서 수수료 계산까지 추가해서 시뮬레이션결과 
-    # 얼마를 벌고하는지 데이터 통계를 먼저 내보고)
-    # 이를 추가적으로 차트화 시켜서 그래프상 어느지점에서 사고 팔았는지 시각화를 해보자.
+    choice = adx_bollinger.buy_sell_algo(last_30hour)
+    
+    if(choice is BuyorSell.SELL):
+        buysell_instance.sell(now_price)
+    elif(choice is BuyorSell.BUY):
+        buysell_instance.buy(now_price)
+    
     simulation_now_time += timedelta(minutes=1)
+# --- 거래 시뮬레이션 종료 --- #
+
+
+# 끝나고 매수인 상태인 경우 결과 확인으르 위해 최종 매도 처리
+if (buysell_instance.holding_numbers is not 0):
+    now_price = json.loads(read_influx.read_with_range_pivot_tag(
+        measure_name, simulation_end_time.isoformat()+"Z",
+        (simulation_end_time + timedelta(minutes=1)).isoformat()+"Z", 'min'))[0]["close"]
+    buysell_instance.sell(now_price)
+    
+# TODO: 시뮬레이션을 돌려본다.
+buysell_instance.print()
+# 그 후에 얼마를 벌고하는지 데이터 통계를 먼저 내보고
+# 이를 추가적으로 차트화 시켜서 그래프상 어느지점에서 사고 팔았는지 시각화를 해보자.
+# 여기까지하고 나서 코드 정리를 한번하고 알고리즘을 보강하자.
+   
 
 
 
